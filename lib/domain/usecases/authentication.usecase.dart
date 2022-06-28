@@ -7,4 +7,6 @@ abstract class AuthenticationUseCase{
 class AuthenticationParams{
   final String email, secretPass;
   AuthenticationParams({required this.email, required this.secretPass});
+
+  Map get toJson => {"email": email, "password": secretPass};
 }
