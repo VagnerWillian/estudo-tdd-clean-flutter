@@ -2,7 +2,6 @@ import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import 'package:estudo_clean_tdd_flutter/domain/usecases/usecases.exports.dart';
 import 'package:estudo_clean_tdd_flutter/data/http/http.exports.dart';
 import 'package:estudo_clean_tdd_flutter/data/usecases/usecases.exports.dart';
 
