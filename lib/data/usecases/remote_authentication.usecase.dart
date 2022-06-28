@@ -1,3 +1,4 @@
+import 'package:estudo_clean_tdd_flutter/helpers/helpers.exports.dart';
 import '../../domain/usecases/authentication.usecase.dart';
 import '../http/http.exports.dart';
 
@@ -8,7 +9,11 @@ class RemoteAuthentication {
 
   Future<void>? auth(AuthenticationParams params)async{
     final body = RemoteAuthenticationParams.fromDomain(params).toJson;
-    return await httpClient.request(url: url, method: 'post', body: body);
+    try{
+      await httpClient.request(url: url, method: 'post', body: body);
+    }on HttpError{
+      throw DomainError.unexpected;
+    }
   }
 }
 
