@@ -1,3 +1,4 @@
+import 'package:estudo_clean_tdd_flutter/data/models/remote_account.model.dart';
 import 'package:estudo_clean_tdd_flutter/helpers/helpers.exports.dart';
 import '../../domain/usecases/authentication.usecase.dart';
 import '../../domain/entities/entities.exports.dart';
@@ -13,7 +14,7 @@ class RemoteAuthentication {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson;
     try{
       final httpReponse = await httpClient.request(url: url, method: 'post', body: body);
-      return AccountEntity.fromJson(httpReponse);
+      return RemoteAccountModel.fromJson(httpReponse).toEntity;
     }on HttpError catch(err){
       throw err == HttpError.unauthorized ?
       DomainError.invalidCredentials : DomainError.unexpected;
