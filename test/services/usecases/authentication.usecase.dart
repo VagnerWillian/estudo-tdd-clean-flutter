@@ -14,18 +14,18 @@ void main(){
   late HttpClient httpClient;
   late String url;
   late RemoteAuthentication sut;
+  late AuthenticationParams params;
 
   setUp((){
       //Arrange
       httpClient = HttpClientSpy();
       url = faker.internet.httpsUrl();
       sut = RemoteAuthentication(httpClient: httpClient, url: url);
-    }
+      params = AuthenticationParams(email: faker.internet.email(), secretPass: faker.internet.password());
+  }
   );
 
   test('Should call HttpClient with correct values', ()async{
-   final params = AuthenticationParams(email: faker.internet.email(), secretPass: faker.internet.password());
-
   //Act
   sut.auth(params);
 
@@ -43,7 +43,6 @@ void main(){
   test('Should throw UnexpectedError if HttpClient returns 400', ()async{
     when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body')))
         .thenThrow(HttpError.badRequest);
-    final params = AuthenticationParams(email: faker.internet.email(), secretPass: faker.internet.password());
 
     //Act
     final future = sut.auth(params);
