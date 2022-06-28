@@ -8,12 +8,12 @@ class RemoteAuthentication {
   RemoteAuthentication({required this.httpClient, required this.url});
 
   Future<void>? auth()async{
-    return await httpClient.request(url: url);
+    return await httpClient.request(url: url, method: 'post');
   }
 }
 
 abstract class HttpClient{
-  Future<void>? request({required String url})async{
+  Future<void>? request({required String url, required String method})async{
     return;
   }
 }
@@ -21,16 +21,28 @@ abstract class HttpClient{
 class HttpClientSpy extends Mock implements HttpClient{}
 
 void main(){
-  test('Should call HttpClient with correct URL', ()async{
-  //Arrange
-  final httpClient = HttpClientSpy();
-  final url = faker.internet.httpsUrl();
-  final sut = RemoteAuthentication(httpClient: httpClient, url: url);
+
+  late HttpClient httpClient;
+  late String url;
+  late RemoteAuthentication sut;
+
+  setUp((){
+      //Arrange
+      httpClient = HttpClientSpy();
+      url = faker.internet.httpsUrl();
+      sut = RemoteAuthentication(httpClient: httpClient, url: url);
+    }
+  );
+
+  test('Should call HttpClient with correct values', ()async{
 
   //Act
   sut.auth();
 
   //Assert
-    verify(httpClient.request(url: url));
+    verify(httpClient.request(
+        url: url,
+        method: 'post'
+    ));
   });
 }
