@@ -37,7 +37,7 @@ dependencies:
 
 dev_dependencies:
   test:
-  mockito:
+  mocktail:
   faker:
   flutter_test:
     sdk: flutter
