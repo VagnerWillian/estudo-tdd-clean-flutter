@@ -1,25 +1,11 @@
-
-import 'dart:convert';
-
+import 'package:estudo_clean_tdd_flutter/helpers/http_error.dart';
+import 'package:estudo_clean_tdd_flutter/infra/http/http.exports.dart';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 class ClientSpy extends Mock implements Client{}
-class HttpAdapter{
-  final Client client;
-  HttpAdapter(this.client);
-  Future<Map?> request({required String url, required String method, Map? body})async{
-    final headers = {
-      "content-type": "application/json",
-      "accept": "application/json",
-    };
-    final response = await client.post(Uri.parse(url), headers: headers, body: body);
-    return response.body.isEmpty ? null : json.decode(response.body);
-  }
-}
-
 
 void main() {
 
@@ -96,6 +82,36 @@ void main() {
 
         //Expected
         expect(response, null);
+      });
+
+      test('should return null if post returns 204 with data', () async {
+        mockResponse(statusCode: 204);
+
+        //Act
+        final response = await sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(response, null);
+      });
+
+      test('should return BadRequestError if post returns 400', () async {
+        mockResponse(statusCode: 400);
+
+        //Act
+        final future = sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(future, throwsA(HttpError.badRequest));
+      });
+
+      test('should return BadRequestError if post returns 400 without body', () async {
+        mockResponse(statusCode: 400, body: '');
+
+        //Act
+        final future = sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(future, throwsA(HttpError.badRequest));
       });
     });
 }
