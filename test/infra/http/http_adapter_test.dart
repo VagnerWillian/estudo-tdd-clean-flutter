@@ -41,12 +41,20 @@ void main() {
     body = {
       "any_key": "any_value"
     };
-  });
+   });
 
     group('post', () {
-      test('should call post with correct values', () async {
-        when(() => client.post(Uri.parse(url), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
 
+      When mockRequest()=>when(() => client.post(Uri.parse(url), headers: any(named: 'headers'), body: any(named: 'body')));
+      void mockResponse({int statusCode = 500, String body = '{"any_key":"any_value"}'}){
+        mockRequest().thenAnswer((_)async=>Response(body, statusCode));
+      }
+
+      setUp((){
+        mockResponse(statusCode: 200);
+      });
+
+      test('should call post with correct values', () async {
         //Act
         await sut.request(url: url, method: 'post', body: body);
 
@@ -55,33 +63,29 @@ void main() {
       });
 
       test('should call post without body', () async {
-        when(() => client.post(Uri.parse(url), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
-
         //Act
         await sut.request(url: url, method: 'post');
 
         //Expected
         verify(() => client.post(Uri.parse(url), headers: headers));
       });
-    });
 
-    test('should return data if post returns 200', () async {
-      when(() => client.post(Uri.parse(url), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
-
+      test('should return data if post returns 200', () async {
         //Act
         final response = await sut.request(url: url, method: 'post');
 
         //Expected
         expect(response, {'any_key':'any_value'});
-    });
+      });
 
-    test('should return null if post returns 204', () async {
-      when(() => client.post(Uri.parse(url), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => Response('', 200));
+      test('should return null if post returns 200', () async {
+        mockResponse(statusCode: 200, body: '');
 
         //Act
         final response = await sut.request(url: url, method: 'post');
 
         //Expected
         expect(response, null);
+      });
     });
 }
