@@ -1,4 +1,4 @@
-import 'package:estudo_clean_tdd_flutter/helpers/http_error.dart';
+import 'package:estudo_clean_tdd_flutter/helpers/helpers.exports.dart';
 import 'package:estudo_clean_tdd_flutter/infra/http/http.exports.dart';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
@@ -28,6 +28,16 @@ void main() {
       "any_key": "any_value"
     };
    });
+
+    group('shared', () {
+      test('should throw ServerError if invalid method is proveded', () async {
+        //Act
+        final future = sut.request(url: url, method: 'invalidMethod');
+
+        //Expected
+        expect(future, throwsA(HttpError.serverError));
+      });
+    });
 
     group('post', () {
 
@@ -112,6 +122,46 @@ void main() {
 
         //Expected
         expect(future, throwsA(HttpError.badRequest));
+      });
+
+      test('should return UnauthorizedError if post returns 401', () async {
+        mockResponse(statusCode: 401);
+
+        //Act
+        final future = sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(future, throwsA(HttpError.unauthorized));
+      });
+
+      test('should return ForbiddenError if post returns 403', () async {
+        mockResponse(statusCode: 403);
+
+        //Act
+        final future = sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(future, throwsA(HttpError.forbidden));
+      });
+
+      test('should return NotFoundError if post returns 404', () async {
+        mockResponse(statusCode: 404);
+
+        //Act
+        final future = sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(future, throwsA(HttpError.notFound));
+      });
+
+      test('should return ServerError if post returns 500 without body', () async {
+        mockResponse(statusCode: 500);
+
+        //Act
+        final future = sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(future, throwsA(HttpError.serverError));
       });
     });
 }
