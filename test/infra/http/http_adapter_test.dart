@@ -10,13 +10,13 @@ class ClientSpy extends Mock implements Client{}
 class HttpAdapter{
   final Client client;
   HttpAdapter(this.client);
-  Future<Map> request({required String url, required String method, Map? body})async{
+  Future<Map?> request({required String url, required String method, Map? body})async{
     final headers = {
       "content-type": "application/json",
       "accept": "application/json",
     };
     final response = await client.post(Uri.parse(url), headers: headers, body: body);
-    return json.decode(response.body);
+    return response.body.isEmpty ? null : json.decode(response.body);
   }
 }
 
@@ -73,5 +73,15 @@ void main() {
 
         //Expected
         expect(response, {'any_key':'any_value'});
+    });
+
+    test('should return null if post returns 204', () async {
+      when(() => client.post(Uri.parse(url), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => Response('', 200));
+
+        //Act
+        final response = await sut.request(url: url, method: 'post');
+
+        //Expected
+        expect(response, null);
     });
 }
