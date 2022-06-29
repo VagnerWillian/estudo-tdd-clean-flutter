@@ -17,29 +17,34 @@ class HttpAdapter{
   }
 }
 
-setup(){
 
-}
+void main() {
 
-main(){
-  group('post', () {
-    test('should call post with correct values', () async{
+  late final Client client;
+  late final HttpAdapter sut;
+  late final String url;
+  late final Map<String, String> headers;
 
-      //Arrange
-      final client = ClientSpy();
-      final sut = HttpAdapter(client);
-      final url = faker.internet.httpUrl();
-      final headers = {
+  setUp(() {
+    //Arrange
+    client = ClientSpy();
+    sut = HttpAdapter(client);
+    url = faker.internet.httpUrl();
+    headers = {
       "content-type": "application/json",
       "accept": "application/json",
-      };
-      when(()=>client.post(Uri.parse(url), headers: headers)).thenAnswer((_) async => Response('body', 401));
-
-      //Act
-      await sut.request(url: url, method: 'post');
-
-      //Expected
-      verify(()=>client.post(Uri.parse(url), headers: headers));
-    });
+    };
   });
+
+    group('post', () {
+      test('should call post with correct values', () async {
+        when(() => client.post(Uri.parse(url), headers: headers)).thenAnswer((_) async => Response('body', 401));
+
+        //Act
+        await sut.request(url: url, method: 'post');
+
+        //Expected
+        verify(() => client.post(Uri.parse(url), headers: headers));
+      });
+    });
 }
