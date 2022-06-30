@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/components.exports.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -6,35 +7,39 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              child: Image(image: AssetImage('assets/logo.png')),
-            ),
-            Text("LOGIN"),
-            Form(
-              child: Column(
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      icon: Icon(Icons.email),
+            const LoginHeader(),
+            Headline1(text: "Login"),
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: Form(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Senha',
-                      icon: Icon(Icons.lock),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 32),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Senha',
+                          icon: Icon(Icons.lock, color: Theme.of(context).primaryColorLight),
+                        ),
+                        obscureText: true,
+                      ),
                     ),
-                    obscureText: true,
-                  ),
-                  ElevatedButton(onPressed: (){}, child: Text('ENTRAR'),),
-                  TextButton.icon(
-                      icon: Icon(Icons.person),
-                      onPressed: (){},
-                      label: Text("Criar conta"))
-                ],
+                    RaisedButton(onPressed: (){}, child: Text('ENTRAR'),),
+                    FlatButton.icon(
+                        icon: const Icon(Icons.person),
+                        onPressed: (){},
+                        label: const Text("Criar conta"))
+                  ],
+                ),
               ),
             )
           ],
