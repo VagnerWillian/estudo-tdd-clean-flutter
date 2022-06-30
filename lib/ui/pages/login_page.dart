@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const LoginHeader(),
-            Headline1(text: "Login"),
+            Center(child: Headline1(text: "Login")),
             Padding(
               padding: const EdgeInsets.all(32),
               child: Form(
@@ -33,7 +33,7 @@ class LoginPage extends StatelessWidget {
                         obscureText: true,
                       ),
                     ),
-                    RaisedButton(onPressed: (){}, child: Text('ENTRAR'),),
+                    RaisedButton(onPressed: null, child: const Text('ENTRAR'),),
                     FlatButton.icon(
                         icon: const Icon(Icons.person),
                         onPressed: (){},
