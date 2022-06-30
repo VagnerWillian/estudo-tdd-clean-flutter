@@ -22,23 +22,33 @@ class LoginPage extends StatelessWidget {
               child: Form(
                 child: Column(
                   children: [
-                    TextFormField(
-                      onChanged: presenter!.validateEmail,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+                    StreamBuilder<String?>(
+                      stream: presenter!.emailErrorStream,
+                      builder: (_, snapshot)=> TextFormField(
+                        onChanged: presenter!.validateEmail,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+                          errorText: snapshot.data?.isEmpty == true ? null : snapshot.data
+                        ),
+                        keyboardType: TextInputType.emailAddress,
                       ),
-                      keyboardType: TextInputType.emailAddress,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 32),
-                      child: TextFormField(
-                        onChanged: presenter!.validatePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Senha',
-                          icon: Icon(Icons.lock, color: Theme.of(context).primaryColorLight),
-                        ),
-                        obscureText: true,
+                      child: StreamBuilder<String?>(
+                        stream: presenter!.passwordErrorStream,
+                        builder: (_, snapshot) {
+                          return TextFormField(
+                            onChanged: presenter!.validatePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Senha',
+                              icon: Icon(Icons.lock, color: Theme.of(context).primaryColorLight),
+                              errorText: snapshot.data?.isEmpty==true ? null : snapshot.data
+                            ),
+                            obscureText: true,
+                          );
+                        }
                       ),
                     ),
                     const RaisedButton(onPressed: null, child: Text('ENTRAR'),),
