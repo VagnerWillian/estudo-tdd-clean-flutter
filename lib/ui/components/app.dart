@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../pages/pages.exports.dart';
 
@@ -16,7 +15,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '4Dev',
-      home: LoginPage(),
+      home: LoginPage(null),
       theme: ThemeData(
         primaryColor: primaryColor,
         primaryColorDark: primaryColorDark,
