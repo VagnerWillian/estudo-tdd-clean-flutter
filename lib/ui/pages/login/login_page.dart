@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                         stream: presenter!.enableButtonStream,
                         builder: (_, snapshot) {
                           return RaisedButton(
-                            onPressed: snapshot.hasData && snapshot.data == true ? (){} : null,
+                            onPressed: snapshot.hasData && snapshot.data == true ? presenter!.auth : null,
                             child: const Text('ENTRAR'),);
                         }
                     ),
