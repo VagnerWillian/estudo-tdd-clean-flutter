@@ -35,11 +35,7 @@ class _LoginPageState extends State<LoginPage> {
 
           widget.presenter!.mainErrorStream.listen((error) {
             if(error!=null){
-              SnackBar snack = SnackBar(
-                  content: Text(error, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  backgroundColor: Colors.red.shade900
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snack);
+              showErrorMessage(context, error);
             }else{
               Navigator.pop(context);
             }

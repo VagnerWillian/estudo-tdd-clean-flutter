@@ -36,9 +36,10 @@ void main(){
 
 
   Future loadPage(WidgetTester tester)async{
+    presenter = LoginPresenterSpy();
     initStreams();
     mockStreams();
-    presenter = LoginPresenterSpy();
+
     final loginPage = MaterialApp(home: LoginPage(presenter));
     await tester.pumpWidget(loginPage);
   }
@@ -160,7 +161,7 @@ void main(){
     await tester.tap(find.byType(RaisedButton));
     await tester.pump();
 
-    verify(()=>presenter.auth()).called(1);
+    verify(presenter.auth).called(1);
 
   });
 
