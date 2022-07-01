@@ -31,6 +31,8 @@ class LoginPage extends StatelessWidget {
                     ],
                   )
               );
+            }else{
+              Navigator.pop(context);
             }
           });
           return SingleChildScrollView(
