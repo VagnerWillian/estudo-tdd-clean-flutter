@@ -18,18 +18,27 @@ void main(){
   late StreamController<bool> loadingVisibleController;
   late StreamController<String?> mainErrorController;
 
-  Future loadPage(WidgetTester tester)async{
-    presenter = LoginPresenterSpy();
+  void initStreams(){
     emailErrorController = StreamController<String?>();
     passwordErrorController = StreamController<String?>();
     enableButtonController = StreamController<bool>();
     loadingVisibleController = StreamController<bool>();
     mainErrorController = StreamController<String?>();
+  }
+
+  void mockStreams(){
     when(()=>presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
     when(()=>presenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
     when(()=>presenter.enableButtonStream).thenAnswer((_) => enableButtonController.stream);
     when(()=>presenter.visibleLoadingStream).thenAnswer((_) => loadingVisibleController.stream);
     when(()=>presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
+  }
+
+
+  Future loadPage(WidgetTester tester)async{
+    initStreams();
+    mockStreams();
+    presenter = LoginPresenterSpy();
     final loginPage = MaterialApp(home: LoginPage(presenter));
     await tester.pumpWidget(loginPage);
   }
