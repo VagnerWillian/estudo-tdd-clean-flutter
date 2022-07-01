@@ -1,4 +1,6 @@
+import 'package:estudo_clean_tdd_flutter/ui/pages/login/components/components.exports.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/components.exports.dart';
 import '../pages.exports.dart';
@@ -48,51 +50,43 @@ class _LoginPageState extends State<LoginPage> {
                 Center(child: Headline1(text: "Login")),
                 Padding(
                   padding: const EdgeInsets.all(32),
-                  child: Form(
-                    child: Column(
-                      children: [
-                        StreamBuilder<String?>(
-                          stream: widget.presenter!.emailErrorStream,
-                          builder: (_, snapshot)=> TextFormField(
-                            onChanged: widget.presenter!.validateEmail,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
-                              errorText: snapshot.data?.isEmpty == true ? null : snapshot.data
+                  child: Provider(
+                    create: (_)=>widget.presenter,
+                    child: Form(
+                      child: Column(
+                        children: [
+                          const EmailInput(),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 32),
+                            child: StreamBuilder<String?>(
+                              stream: widget.presenter!.passwordErrorStream,
+                              builder: (_, snapshot) {
+                                return TextFormField(
+                                  onChanged: widget.presenter!.validatePassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'Senha',
+                                    icon: Icon(Icons.lock, color: Theme.of(context).primaryColorLight),
+                                    errorText: snapshot.data?.isEmpty==true ? null : snapshot.data
+                                  ),
+                                  obscureText: true,
+                                );
+                              }
                             ),
-                            keyboardType: TextInputType.emailAddress,
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, bottom: 32),
-                          child: StreamBuilder<String?>(
-                            stream: widget.presenter!.passwordErrorStream,
-                            builder: (_, snapshot) {
-                              return TextFormField(
-                                onChanged: widget.presenter!.validatePassword,
-                                decoration: InputDecoration(
-                                  labelText: 'Senha',
-                                  icon: Icon(Icons.lock, color: Theme.of(context).primaryColorLight),
-                                  errorText: snapshot.data?.isEmpty==true ? null : snapshot.data
-                                ),
-                                obscureText: true,
-                              );
-                            }
+                          StreamBuilder<bool>(
+                              stream: widget.presenter!.enableButtonStream,
+                              builder: (_, snapshot) {
+                                return RaisedButton(
+                                  onPressed: snapshot.hasData && snapshot.data == true ? widget.presenter!.auth : null,
+                                  child: const Text('ENTRAR'),);
+                              }
                           ),
-                        ),
-                        StreamBuilder<bool>(
-                            stream: widget.presenter!.enableButtonStream,
-                            builder: (_, snapshot) {
-                              return RaisedButton(
-                                onPressed: snapshot.hasData && snapshot.data == true ? widget.presenter!.auth : null,
-                                child: const Text('ENTRAR'),);
-                            }
-                        ),
-                        FlatButton.icon(
-                            icon: const Icon(Icons.person),
-                            onPressed: (){},
-                            label: const Text("Criar conta"))
-                      ],
+                          FlatButton.icon(
+                              icon: const Icon(Icons.person),
+                              onPressed: (){},
+                              label: const Text("Criar conta"))
+                        ],
+                      ),
                     ),
                   ),
                 )
